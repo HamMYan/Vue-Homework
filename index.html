@@ -4,79 +4,122 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vue Homework</title>
-
+    <title>Vue 5</title>
     <style>
-        #app{
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-        .card {
-            margin: 40px;            
-            width: 250px;
-            height: 380px;
-            border: 3px solid;
-            border-radius: 15px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-        }
-
-        .cardImg {
-            width: 220px;
+        .colorDiv {
+            width: 200px;
             height: 200px;
-            border-radius: 10px;
-            margin-top: 15px;
         }
 
-        .line{
-            width: 100%;
-            height: 1.5px;
-            background-color: black;
-            margin-top: 10px;
+        .foods {
+            border: dashed black 1px;
+            width: 400px;
+            padding: 20px;
         }
-        .btn{
-            width: 100px;
-            height: 25px;
-            margin-top: 10px;
-            margin-bottom: 10px;
-            border-radius: 10px;
+
+        .foods>img {
+            float: right;
+            width: 55%;
         }
-        .btn:hover{
-            background-color: rgb(170, 167, 167);
-            color: white;
+
+        li:hover {
+            cursor: pointer;
+            background-color: rgb(224, 224, 224);
+        }
+
+        .foods>ol {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .foods {
+            padding-left: 6px;
+            border-radius: 5px;
+            width: 70px;
         }
     </style>
 </head>
 
 <body>
     <div id="app">
-        <div v-for="x in cards" class="card">
-            <img class="cardImg"
-                v-bind:src="x.url"
-                alt="Card Image">
-            <div class="line"></div>
-            <h1>{{x.name}}</h1>
-            <span>{{x.price}} $</span>
-            <button class="btn">Buy</button>
+        <h1>Vue events</h1>
+        <hr>
+        <br>
+        <br>
+
+        <h3>Onclick</h3>
+        <hr><br>
+
+        <p>Count: {{count}}</p>
+
+        <button v-on:click="count++">Click</button>
+        <br><br>
+
+        <p>Change Background Theme</p>
+        <button v-on:click="darkTheme">Dark</button>
+        <br>
+        <br>
+        <button v-on:click="lightTheme">Light</button>
+        <hr><br>
+
+        <h3>Input event</h3>
+        <hr><br>
+
+        <input type="text" v-on:input="inpCount++">
+        <br>
+        <p>Input text count: {{inpCount}}</p>
+        <hr><br>
+
+        <h3>Mouse event</h3>
+        <hr><br>
+
+        <div class="colorDiv" v-on:mousemove="colorVal = Math.floor(Math.random()*360)"
+            v-bind:style="{backgroundColor:'hsl('+colorVal+',80%,80%)'}"></div>
+        <hr><br>
+
+        <h3>Click event</h3>
+        <hr><br>
+
+        <div class="foods">
+            <img v-bind:src="imgUrl">
+            <ol>
+                <li v-for="food in manyFoodsObj" @:click="imgUrl = food.url">
+                    {{food.name}}
+                </li>
+            </ol>
         </div>
+
     </div>
 
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script>
+        function darkTheme() {
+            document.body.style.backgroundColor = 'black'
+            document.body.style.color = 'white'
+        }
+        function lightTheme() {
+            document.body.style.backgroundColor = 'white'
+            document.body.style.color = 'black'
+        }
+
+        const manyFoodsObj = [
+            { name: 'Burrito', url: 'https://www-w3schools-com.translate.goog/vue/img_burrito.svg' },
+            { name: 'Pzza', url: 'https://www.w3schools.com/vue/img_pizza.svg' },
+            { name: 'Cake', url: 'https://www-w3schools-com.translate.goog/vue/img_cake.svg' },
+        ]
+
+
         const app = Vue.createApp({
             data() {
-                const cards = [
-                    {name:'Shoes', price:2500, url:'https://cdn-images.buyma.com/imgdata/item/220607/0083663454/460830128/428.jpg'},
-                    {name:'T-shirt', price:3000, url:'https://www.mrporter.com/variants/images/3633577411310824/in/w2000_q60.jpg'},
-                    {name:'Pants', price:2700, url:'https://www.seedpeoplesmarket.com/cdn/shop/products/1_v180_450x.png?v=1698951908'},
-                    {name:'Hat', price:2100, url:'https://www.bfgcdn.com/1500_1500_90/204-3447-0311/sunday-afternoons-havana-hat-hat.jpg'},
-                    {name:'Sunglasses', price:3200, url:'data:image/png;base64,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'},
-                ]
                 return {
-                    cards
+                    count: 0,
+                    inpCount: 0,
+                    colorVal: 50,
+                    manyFoodsObj,
+                    imgUrl: 'https://www.w3schools.com/vue/img_pizza.svg',
+                    darkTheme,
+                    lightTheme,
                 }
             }
         })
